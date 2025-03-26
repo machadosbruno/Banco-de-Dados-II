@@ -1,8 +1,8 @@
 --Criando o banco de dados
-create database BDTarefa4IFSP
+create database BDTarefa4IFSP3139786
 
 --Selecionando o BDTarefa4IFSP para realizar os próximos comandos
-use BDTarefa4IFSP
+use BDTarefa4IFSP3139786
 
 --Criando a tabela TBEquipamento
 create table TBEquipamento3139786(
