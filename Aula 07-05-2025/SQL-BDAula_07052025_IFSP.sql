@@ -143,7 +143,7 @@ select
 	 on (e.EstCodigo = s.PesCodigo)
 	 where (e.EstCodigo = p.FuncionarioID)
 	)								[Nome do Estagiário],
-	sum(pv.quantidade * preco)		[Total do Pedido],
+	sum(pv.quantidade * pv.preco)		[Total do Pedido],
 	COUNT(pv.ProdutoID)				[Quantidade de Itens]
 from
 	TBProdutosVedidos as pv
@@ -182,7 +182,7 @@ create view vPedidoValorTotalEQtdItens as
 		 on (e.EstCodigo = s.PesCodigo)
 		 where (e.EstCodigo = p.FuncionarioID)
 		)								[Nome do Estagiário],
-		sum(pv.quantidade * preco)		[Total do Pedido],
+		sum(pv.quantidade * pv.preco)		[Total do Pedido],
 		COUNT(pv.ProdutoID)				[Quantidade de Itens]
 	from
 		TBProdutosVedidos as pv
@@ -351,6 +351,9 @@ where
 
 print concat('Existem ', @menor, ' pedidos com valor acima de R$500.00!')
 
+--Código SQL que confirma as minhas respostas:
+select * from vPedidoValorTotalEQtdItens
+
 /*
 5) Agora suponha que acha necessidade de customizar a consulta do exercício 4)
 para ficar maisfácilpara os usuários utilizarem. Supor que na consulta precisa
@@ -401,3 +404,158 @@ end
 exec sp2 201;
 exec sp2 1009;
 select * from vPedidosTotalMaiores500
+
+
+--6) Fazer uma consulta e depois uma visão (view) que retorne os dados. Mostrar a execuçãodaview.
+/*
+ID produto, nome produto, valor produto;
+Calcular o Quanto (R$) foi Vendido do Produto;
+Contar em quantos Pedidos tem o Produto;
+Somar a quantidade de Unidade vendidas deste produto.
+*/
+
+--fazendo a consulta
+select
+	p.ProdutoID								[ID Produto],
+	p.Descricao								[Nome Produto],
+	p.Preco									[Preco do Produto],
+	sum(pv.preco * pv.quantidade)			[Total vendido],
+	COUNT(pv.PedidoID)						[Quantidades de Pedidos],
+	sum(pv.quantidade)						[Unidades vendidas]
+from
+	TBprodutos as p
+join
+	TBProdutosVedidos as pv
+	on (p.ProdutoID = pv.ProdutoID)
+group by p.ProdutoID, p.Descricao, p.Preco
+
+--criando a View
+create view vVendasProduto
+as
+select
+	p.ProdutoID								[ID Produto],
+	p.Descricao								[Nome Produto],
+	p.Preco									[Preco do Produto],
+	sum(pv.preco * pv.quantidade)			[Total vendido],
+	COUNT(pv.PedidoID)						[Quantidades de Pedidos],
+	sum(pv.quantidade)						[Unidades vendidas]
+from
+	TBprodutos as p
+join
+	TBProdutosVedidos as pv
+	on (p.ProdutoID = pv.ProdutoID)
+group by p.ProdutoID, p.Descricao, p.Preco
+--Responder a pergunta:
+--6.1) considerando que tem mais de uma tabela envolvida na consulta, como o SQL sabe e traz os dados de cada produto?
+/*
+Só conseguimos extrair os dados de cada produto pois cada um deles tem um identificador único. A exclusividade única
+deste identificador é garantida pela restrição chave primária nesse atributo. Por fim, através da restrição chave
+estrangeira na segunda tabela envolvida, buscando os dados nesse atributo pelo identificador (chave primária) nessa
+tabela conseguimos saber a qual produto se referenciam os dados dos registros da segunda tabela.
+*/
+
+--7) Fazer uma consulta e uma visão e retorne os dados:
+/*
+ID produto, nome produto, valor produto;
+Calcular o Quanto (R$) foi Vendido do Produto;
+Contar em quantos Pedidos tem o Produto;
+Somar a quantidade de Unidade vendidas deste produto.
+Condição de filtro: apenas os produtos que não foram vendidos.
+Regra: usar o recurso select encadeado (um select dentro do outro - já usado emsala de aula)
+e que faz uso do conceito de teoria dos conjuntos (não esta contido).
+*/
+select
+	p.ProdutoID,
+	p.Descricao,
+	p.Preco,
+	(select
+		sum(pv.preco * pv.quantidade)			[Total vendido]
+	from
+		TBProdutosVedidos as pv
+	where (p.ProdutoID = pv.ProdutoID)
+	) [Total vendido],
+	(select
+		COUNT(pv.PedidoID)						[Quantidades de Pedidos]
+	from
+		TBProdutosVedidos as pv
+	where (p.ProdutoID = pv.ProdutoID)
+	) [Quantidades de Pedidos],
+	(select
+		sum(pv.quantidade)							[Unidades vendidas]
+	from
+		TBProdutosVedidos as pv
+	where (p.ProdutoID = pv.ProdutoID)
+	) [Unidades vendidas]
+from
+	TBProdutos as p
+where (p.ProdutoID not in (
+	select
+		ProdutoID
+	from
+		TBProdutosVedidos
+))
+
+create view vVendasProdutoNaoVendidos
+as
+	select
+		p.ProdutoID,
+		p.Descricao,
+		p.Preco,
+		(select
+			sum(pv.preco * pv.quantidade)			[Total vendido]
+		from
+			TBProdutosVedidos as pv
+		where (p.ProdutoID = pv.ProdutoID)
+		) [Total vendido],
+		(select
+			COUNT(pv.PedidoID)						[Quantidades de Pedidos]
+		from
+			TBProdutosVedidos as pv
+		where (p.ProdutoID = pv.ProdutoID)
+		) [Quantidades de Pedidos],
+		(select
+			sum(pv.quantidade)							[Unidades vendidas]
+		from
+			TBProdutosVedidos as pv
+		where (p.ProdutoID = pv.ProdutoID)
+		) [Unidades vendidas]
+	from
+		TBProdutos as p
+	where (p.ProdutoID not in (
+		select
+			ProdutoID
+		from
+			TBProdutosVedidos
+	))
+
+select * from vVendasProdutoNaoVendidos
+
+--8) Fazer uma stored procedure (sp) que recebe um numero inteiro retorna se este número é divisívelou não por 3.
+/*Mostrar nos resultados retornados: o numero passado no parâmetro, a divisão feita e se o número “é divisível por três” ou “número não é divisível por 3”.
+Dicas:  O comando abaixo acumula o resto do numero passado como parâmetro na variável que foi criada na procedure (sp):
+Set @resto = (@valor1 % 3) --  Agora usando uma lógica com IF e Else é possível saber se o Número passado no parâmetroéounãodivisível por três. */
+create procedure spNumeroDivisivelPor3
+(@n int)
+as
+begin
+	declare @resto int
+	set @resto = (@n % 3)
+	if @resto = 0
+	begin
+		print concat('O número passado ', @n, ' foi dividido por três, o resto dessa divisão é ', @resto, ', então ele é divisível por três')
+	end
+	else
+	begin
+		print concat('O número passado ', @n, ' foi dividido por três, o resto dessa divisão é ', @resto, ', então ele não é divisível por três')
+	end
+end
+
+exec spNumeroDivisivelPor3 5;
+exec spNumeroDivisivelPor3 6;
+
+--9) Fazer uma stored procedure (sp) e depois uma função (fx) que recebe como parâmetroumdadonúmero de produto e retorna:
+/*
+Todos os Pedidos que tem aquele Produto e seus respectivos clientes (nome) e data Pedido;
+Se o produto não existir, retornar a mensagem: “Produto não cadastrado na TBProfutos” Responda a pergunta:
+ Quantas tabelas foram envolvidas. Justifique sua resposta.
+*/
