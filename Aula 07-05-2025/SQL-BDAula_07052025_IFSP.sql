@@ -553,9 +553,59 @@ end
 exec spNumeroDivisivelPor3 5;
 exec spNumeroDivisivelPor3 6;
 
---9) Fazer uma stored procedure (sp) e depois uma função (fx) que recebe como parâmetroumdadonúmero de produto e retorna:
+--9) Fazer uma stored procedure (sp) e depois uma função (fx) que recebe como parâmetro um dado número de produto e retorna:
 /*
 Todos os Pedidos que tem aquele Produto e seus respectivos clientes (nome) e data Pedido;
 Se o produto não existir, retornar a mensagem: “Produto não cadastrado na TBProfutos” Responda a pergunta:
+*/
+
+create procedure spPedidoProdutoClienteData
+(@codProduto int)
+as
+begin
+	if 0 = (
+		select
+			count(ProdutoID)
+		from
+			TBprodutos
+		where (ProdutoID = @codProduto)
+		)
+	begin
+		print 'Produto não cadastrado na TBProdutos'
+	end
+	else
+	begin
+		select distinct
+			pv.PedidoID,
+			pes.PesNome,
+			ped.data
+		from
+			TBPessoas as pes
+		join
+			TBclientes as cli
+			on (pes.PesCodigo = cli.CliCodigo)
+		join
+			TBpedidos as ped
+			on (ped.ClienteID = cli.CliCodigo)
+		join
+			TBProdutosVedidos as pv
+			on (pv.PedidoID = ped.PedidoID)
+		join
+			TBProdutos as p
+			on (p.ProdutoID = pv.ProdutoID)
+		where (pv.ProdutoID = @codProduto)
+	end
+end
+
+exec spPedidoProdutoClienteData 3001;
+exec spPedidoProdutoClienteData 201;
+
+/*
  Quantas tabelas foram envolvidas. Justifique sua resposta.
+
+Foram envolvidas 5 tabelas. Devido à tabela de clientes ser uma "extensão" da tabela de Pessoas
+foi necessário incluílas, para informar o nome do pedinte, além da tabela de Pedido, para ter os
+dados do Pedido, a tabela de Produtos Vendidos, que implementa o relacionamento N para N entre
+Pedidos e Produtos para verificar qual(is) pedidos estão relacionados ao Produto informado, e a
+tabela Produto, para verificar a existência do produto.
 */
