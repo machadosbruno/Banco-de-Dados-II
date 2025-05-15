@@ -330,7 +330,7 @@ insert into TBAnimal values
 (10, 'Lucy', 'Gato', 'Maine Coon', 'F', 10),
 (11, 'Rocky', 'Cachorro', 'Beagle', 'M', 11),
 (12, 'Cleo', 'Gato', 'Sphynx', 'F', 12);
-delete from TBServico
+
 insert into TBServico values
 (1, 'Banho Simples Cão Pequeno Porte', 50.00, '00:45:00', 'Inclui limpeza de ouvidos.'),
 (2, 'Tosa Higiênica Cão Médio Porte', 40.00, '00:30:00', 'Aparar pelos das patas, barriga e região íntima.'),
@@ -346,43 +346,394 @@ insert into TBServico values
 (12, 'Limpeza de Tártaro (Profilaxia Oral)', 350.00, '01:15:00', 'Requer avaliação prévia e, por vezes, sedação leve.');
 
 insert into TBAnimalServico values
-(1, 1, 1, '2023-11-01 09:30:00', 'Animal cooperativo', 1001, 50.00),
-(2, 2, 5, '2023-11-01 08:00:00', 'Gato um pouco agitado.', 1002, 150.00),
-(3, 3, 2, '2023-11-02 10:45:00', 'Tosa padrão da raça.', 1003, 40.00),
-(4, 4, 8, '2023-11-02 11:00:00', 'Unhas estavam grandes.', 1004, 25.00),
-(5, 5, 3, '2023-11-03 12:00:00', 'Cliente trouxe histórico.', 1005, 120.00),
-(6, 6, 4, '2023-11-03 14:00:00', 'Reforço anual.', 1006, 90.00),
-(7, 7, 9, '2023-11-04 13:15:00', 'Pelo ficou macio.', 1007, 60.00),
-(8, 8, 11, '2023-11-04 15:00:00', 'Microchip aplicado.', 1008, 80.00),
-(9, 9, 1, '2023-11-05 14:30:00', 'Banho e secagem completa.', 1009, 50.00),
-(10, 10, 12, '2023-11-05 16:00:00', 'Realizado com sedação.', 1010, 350.00),
-(11, 11, 7, '2023-11-06 15:45:00', 'Proprietário participou.', 1011, 100.00),
-(12, 12, 6, '2023-11-06 17:00:00', 'Animal adaptou-se bem.', 1012, 70.00);
+(1, 1, '2023-11-01 09:30:00', 'Animal cooperativo', 1001, 50.00),
+(2, 2, '2023-11-01 08:00:00', 'Gato um pouco agitado.', 1002, 150.00),
+(3, 3, '2023-11-02 10:45:00', 'Tosa padrão da raça.', 1003, 40.00),
+(4, 4, '2023-11-02 11:00:00', 'Unhas estavam grandes.', 1004, 25.00),
+(5, 5, '2023-11-03 12:00:00', 'Cliente trouxe histórico.', 1005, 120.00),
+(6, 6, '2023-11-03 14:00:00', 'Reforço anual.', 1006, 90.00),
+(7, 7, '2023-11-04 13:15:00', 'Pelo ficou macio.', 1007, 60.00),
+(8, 8, '2023-11-04 15:00:00', 'Microchip aplicado.', 1008, 80.00),
+(9, 9, '2023-11-05 14:30:00', 'Banho e secagem completa.', 1009, 50.00),
+(10, 10, '2023-11-05 16:00:00', 'Realizado com sedação.', 1010, 350.00),
+(11, 11, '2023-11-06 15:45:00', 'Proprietário participou.', 1011, 100.00),
+(12, 12, '2023-11-06 17:00:00', 'Animal adaptou-se bem.', 1012, 70.00);
 
 insert into TBClienteServico values
-(1, 1, 3, '2023-11-01 09:05:00'),
-(2, 2, 10, '2023-11-02 10:20:00'),
-(3, 3, 7, '2023-11-03 11:35:00'),
-(4, 4, 6, '2023-11-04 12:50:00'),
-(5, 5, 3, '2023-11-05 14:05:00'),
-(6, 6, 4, '2023-11-06 15:20:00'),
-(7, 7, 1, '2023-11-07 16:35:00'),
-(8, 8, 2, '2023-11-08 09:50:00'),
-(9, 9, 11, '2023-11-09 11:05:00'),
-(10, 10, 12, '2023-11-10 12:20:00'),
-(11, 11, 5, '2023-11-11 13:35:00'),
-(12, 12, 8, '2023-11-12 14:50:00');
+(1, 1, '2023-11-01 09:05:00'),
+(2, 2, '2023-11-02 10:20:00'),
+(3, 3, '2023-11-03 11:35:00'),
+(4, 4, '2023-11-04 12:50:00'),
+(5, 5, '2023-11-05 14:05:00'),
+(6, 6, '2023-11-06 15:20:00'),
+(7, 7, '2023-11-07 16:35:00'),
+(8, 8, '2023-11-08 09:50:00'),
+(9, 9, '2023-11-09 11:05:00'),
+(10, 10, '2023-11-10 12:20:00'),
+(11, 11, '2023-11-11 13:35:00'),
+(12, 12, '2023-11-12 14:50:00');
 
 insert into TBFuncionarioServico values
-(1, 3, 1, '2023-11-01 09:10:00', '00:45:00'),
-(2, 4, 2, '2023-11-02 10:25:00', '00:30:00'),
-(3, 7, 3, '2023-11-03 11:40:00', '00:40:00'),
-(4, 6, 4, '2023-11-03 11:50:00', '00:15:00'),
-(5, 3, 5, '2023-11-01 08:05:00', '01:30:00'),
-(6, 12, 6, '2023-11-06 17:05:00', '00:10:00'),
-(7, 8, 7, '2023-11-06 15:50:00', '01:00:00'),
-(8, 4, 8, '2023-11-02 11:05:00', '00:10:00'),
-(9, 3, 9, '2023-11-04 13:20:00', '00:30:00'),
-(10, 7, 10, '2023-11-02 10:30:00', '01:00:00'),
-(11, 6, 11, '2023-11-04 15:05:00', '00:20:00'),
-(12, 7, 12, '2023-11-05 16:05:00', '01:15:00');
+(1, 3, '2023-11-01 09:10:00', '00:45:00'),
+(2, 4, '2023-11-02 10:25:00', '00:30:00'),
+(3, 7, '2023-11-03 11:40:00', '00:40:00'),
+(4, 6, '2023-11-03 11:50:00', '00:15:00'),
+(5, 3, '2023-11-01 08:05:00', '01:30:00'),
+(6, 12, '2023-11-06 17:05:00', '00:10:00'),
+(7, 8, '2023-11-06 15:50:00', '01:00:00'),
+(8, 4, '2023-11-02 11:05:00', '00:10:00'),
+(9, 3, '2023-11-04 13:20:00', '00:30:00'),
+(10, 7, '2023-11-02 10:30:00', '01:00:00'),
+(11, 6, '2023-11-04 15:05:00', '00:20:00'),
+(12, 7, '2023-11-05 16:05:00', '01:15:00');
+
+
+--2) Fazer uma consulta e visão (View).
+/*
+Consultar as compras dos Clientes, mostrando:
+Código e data da Compra;
+Código e nome Cliente;
+Código e nome do Funcionário;
+Calcular o Total Compra;
+Contar quantos itens (produtos) tem a Compra
+Mostrar a execução da visão
+*/
+select
+	c.IDCompra					[Código da Compra],
+	c.DataCompra				[Data da Compra],
+	cli.IDCliente				[Código do Cliente],
+	cli.NomeCliente				[Nome do Cliente],
+	f.IDFuncionario				[Código do Funcionário],
+	f.NomeFuncionario			[Nome do Funcionário],
+	sum(pc.Quantidade * pc.ValorCompra) [Total da Compra],
+	count(pc.CodCompra)			[Quantidade de Itens]
+from 
+	TBCompra as c
+join
+	TBCliente as cli
+	on (c.CodCliente = cli.IDCliente)
+join
+	TBFuncionario as f
+	on (c.CodFuncionario = f.IDFuncionario)
+join
+	TBProdutosCompra as pc
+	on (c.IDCompra = pc.CodCompra)
+group by c.IDCompra, c.DataCompra, cli.IDCliente, cli.NomeCliente, f.IDFuncionario, f.NomeFuncionario
+
+create view vCompra
+as
+	select
+		c.IDCompra					[Código da Compra],
+		c.DataCompra				[Data da Compra],
+		cli.IDCliente				[Código do Cliente],
+		cli.NomeCliente				[Nome do Cliente],
+		f.IDFuncionario				[Código do Funcionário],
+		f.NomeFuncionario			[Nome do Funcionário],
+		sum(pc.Quantidade * pc.ValorCompra) [Total da Compra],
+		count(pc.CodCompra)			[Quantidade de Itens]
+	from 
+		TBCompra as c
+	join
+		TBCliente as cli
+		on (c.CodCliente = cli.IDCliente)
+	join
+		TBFuncionario as f
+		on (c.CodFuncionario = f.IDFuncionario)
+	join
+		TBProdutosCompra as pc
+		on (c.IDCompra = pc.CodCompra)
+	group by c.IDCompra, c.DataCompra, cli.IDCliente, cli.NomeCliente, f.IDFuncionario, f.NomeFuncionario
+
+select * from vCompra
+
+--3) Fazer uma stored procedure (sp), que “usa transação”, que recebe como parâmetro ocódigo de um Cliente e retorna:
+/*
+Código, nome, telefone do Cliente;
+Calcular (somar) o total de compras do Cliente;
+Mostrar quantidade de compras deste cliente (contar);
+Calcular a Média de Compras do Cliente.
+Mostrar a execução da procedure (sp) para dois (2) clientes.
+*/
+create procedure spCliente
+(@CodCliente int)
+as
+begin
+	begin transaction tSpCliente
+	declare @TotalCompras decimal(15,2)
+	set @TotalCompras = (
+		select
+			sum(cp.Quantidade * cp.ValorCompra)
+		from
+			TBProdutosCompra as cp
+		join
+			TBCompra as c
+			on (cp.CodCompra = c.IDCompra)
+		where (c.CodCliente = @CodCliente)
+	)
+	declare @QtdCompras int
+	set @QtdCompras = (
+		select
+			count(c.CodCliente)
+		from
+			TBCompra as c
+		join
+			TBCliente as cli
+			on (c.CodCliente = cli.IDCliente)
+		where (cli.IDCliente = @CodCliente)
+	)
+	select 
+		c.IDCliente					[Código do Cliente],
+		c.NomeCliente				[Nome do Cliente],
+		c.Telefone					[Telefone do Cliente],
+		(select @TotalCompras)		[Valor total das compras],
+		(select @QtdCompras)		[Quantidade de Compras],
+		sum(@TotalCompras / @QtdCompras) [Média de Compras]
+	from
+		TBCliente as c
+	where c.IDCliente = @CodCliente
+	group by c.IDCliente, c.NomeCliente, c.Telefone
+	if @@TRANCOUNT != 0
+	begin
+		rollback transaction tSpCliente
+	end
+	else
+	begin
+		commit transaction tSpCliente
+	end
+end
+
+exec spCliente 7
+exec spCliente 2
+
+--4) Fazer uma consulta e uma visão (view) que retorna:
+/*
+Código, nome, sexo do animal;
+Nome do Cliente;
+Calcular Total (R$) serviços realizados no animal;
+Contar a quantidade de Serviços realizados no animal.
+-- mostrar a execução da visão
+*/
+select
+	a.IDAnimal					[Código do Animal],
+	a.NomeAnimal				[Nome do Animal],
+	a.Sexo						[Sexo do Animal],
+	cli.NomeCliente				[Nome do cliente],
+	sum(aser.QtdeServico * aser.ValorServico) [Total em serviços realizados no animal],
+	count(aser.CodAnimal)		[Quantidade de Serviços realizados no animal]
+from
+	TBAnimal as a
+join
+	TBCliente as cli
+	on (a.CodCliente = cli.IDCliente)
+join
+	TBAnimalServico as aser
+	on (a.IDAnimal = aser.CodAnimal)
+group by a.IDAnimal, a.NomeAnimal, a.Sexo, cli.NomeCliente
+
+create view vAnimal
+as
+	select
+		a.IDAnimal					[Código do Animal],
+		a.NomeAnimal				[Nome do Animal],
+		a.Sexo						[Sexo do Animal],
+		cli.NomeCliente				[Nome do cliente],
+		sum(aser.QtdeServico * aser.ValorServico) [Total em serviços realizados no animal],
+		count(aser.CodAnimal)		[Quantidade de Serviços realizados no animal]
+	from
+		TBAnimal as a
+	join
+		TBCliente as cli
+		on (a.CodCliente = cli.IDCliente)
+	join
+		TBAnimalServico as aser
+		on (a.IDAnimal = aser.CodAnimal)
+	group by a.IDAnimal, a.NomeAnimal, a.Sexo, cli.NomeCliente
+
+select * from vAnimal
+
+--5) Fazer uma stored procedure (sp) e uma função (fx)
+/*
+Recebe como parâmetro o código de um serviço e retorna:
+
+Código, descrição, valor estimado do serviço, da tabela TBServico;
+Data e tempo gasto de TBFuncionarioServico;
+E nome do Funcionário.
+	5.1) Seria possível saber e mostrar quais os funcionários realizaram mais de umserviço?
+	-- mostrar a execução da sp e da fx.
+*/
+create procedure spServico
+(@CodServico int)
+as
+begin
+	begin transaction tSpServico
+	select
+		s.IDServico						[Código do Serviço],
+		s.Descricao						[Descrição],
+		s.ValorEstimadoServico			[Valor Estimado],
+		fs.Data,
+		fs.TempoGasto					[Tempo Gasto],
+		f.NomeFuncionario				[Nome do funcionario]
+	from
+		TBServico as s
+	join
+		TBFuncionarioServico as fs
+		on (s.IDServico = fs.CodServico)
+	join
+		TBFuncionario as f
+		on (fs.CodFuncionario = f.IDFuncionario)
+	where (s.IDServico = @CodServico)
+	if @@TRANCOUNT != 0
+	begin
+		rollback transaction tSpServico
+	end
+	else
+	begin
+		commit transaction tSpServico
+	end
+end
+
+exec spServico 7
+exec spServico 3
+
+create function fServico
+(@CodServico int)
+returns table
+as
+return(
+	select
+		s.IDServico						[Código do Serviço],
+		s.Descricao						[Descrição],
+		s.ValorEstimadoServico			[Valor Estimado],
+		fs.Data,
+		fs.TempoGasto					[Tempo Gasto],
+		f.NomeFuncionario				[Nome do funcionario]
+	from
+		TBServico as s
+	join
+		TBFuncionarioServico as fs
+		on (s.IDServico = fs.CodServico)
+	join
+		TBFuncionario as f
+		on (fs.CodFuncionario = f.IDFuncionario)
+	where (s.IDServico = @CodServico)
+)
+
+select * from fServico(3)
+select * from fServico(7)
+--Resposta a questão 5.1
+/*
+Sim, pois a procedure ou a função vai retornar mais de uma linha,
+quando o serviço tem mais de um funcionário relacionado à ele.
+*/
+
+--6) Fazer uma consulta e depois uma visão (view) que retorne os dados. Mostrar a execuçãodaview.
+/*
+ID, Razão Social, e telefone do fornecedor;
+Calcular o Total (R$) de Compra dos Produtos do Fornecedor;
+Contar quantas Compras tem o Fornecedor;
+Calcular o valor Médio das Compras do Fornecedor
+*/
+select
+	f.IDFornecedor						[Código do Fornecedor],
+	f.RazaoSocial						[Razão Social],
+	f.Telefone,
+	sum(pc.Quantidade * pc.ValorCompra)	[Total de Compra dos Produtos],
+	COUNT(pc.CodProduto)				[Quantidade de Compras],
+	(sum(pc.Quantidade * pc.ValorCompra) / COUNT(pc.CodProduto)) [Média das compra]
+from
+	TBFornecedor as f
+join
+	TBProduto as p
+	on (f.IDFornecedor = p.CodFornecedor)
+join
+	TBProdutosCompra as pc
+	on (p.IDProduto = pc.CodProduto)
+group by f.IDFornecedor, f.RazaoSocial, f.Telefone
+
+create view vFornecedor
+as
+	select
+		f.IDFornecedor						[Código do Fornecedor],
+		f.RazaoSocial						[Razão Social],
+		f.Telefone,
+		sum(pc.Quantidade * pc.ValorCompra)	[Total de Compra dos Produtos],
+		COUNT(pc.CodProduto)				[Quantidade de Compras],
+		(sum(pc.Quantidade * pc.ValorCompra) / COUNT(pc.CodProduto)) [Média das compra]
+	from
+		TBFornecedor as f
+	join
+		TBProduto as p
+		on (f.IDFornecedor = p.CodFornecedor)
+	join
+		TBProdutosCompra as pc
+		on (p.IDProduto = pc.CodProduto)
+	group by f.IDFornecedor, f.RazaoSocial, f.Telefone
+
+select * from vFornecedor
+
+--7) Fazer uma consulta e uma visão e retorne dados:
+/*
+Elaborar uma consulta e depois uma visão.
+Condição: que use pelo menos três (3) tabelas relacionadas e não seja nenhuma das visões anteriores.
+Mostrar o enunciado da consulta.
+*/
+
+--Enunciado:
+/*
+	Consulta e Visão que mostra:
+		ID, Nome e Cidade do Cliente;
+		Conta quandos Serviços ele solicitou;
+		Soma o valor total dos serviços
+		Faz a média de valor dos serviços
+*/
+
+select
+	c.IDCliente							[Código do Cliente],
+	c.NomeCliente						[Nome do Cliente],
+	cid.NomeCidade						[Nome da Cidade],
+	count(cs.CodCliente)				[Quantidade de Servicos],
+	sum(s.ValorEstimadoServico)			[Total em Serviços],
+	(sum(s.ValorEstimadoServico) / count(cs.CodCliente)) [Média dos serviços]
+from
+	TBCliente as c
+join
+	TBClienteServico as cs
+	on (c.IDCliente = cs.CodCliente)
+join
+	TBServico as s
+	on (cs.CodServico = s.IDServico)
+join
+	TBCidade as cid
+	on (c.CodCidade = cid.IDCidade)
+group by c.IDCliente, c.NomeCliente, cid.NomeCidade
+
+create view vClienteServico
+as
+	select
+		c.IDCliente							[Código do Cliente],
+		c.NomeCliente						[Nome do Cliente],
+		cid.NomeCidade						[Nome da Cidade],
+		count(cs.CodCliente)				[Quantidade de Servicos],
+		sum(s.ValorEstimadoServico)			[Total em Serviços],
+		(sum(s.ValorEstimadoServico) / count(cs.CodCliente)) [Média dos serviços]
+	from
+		TBCliente as c
+	join
+		TBClienteServico as cs
+		on (c.IDCliente = cs.CodCliente)
+	join
+		TBServico as s
+		on (cs.CodServico = s.IDServico)
+	join
+		TBCidade as cid
+		on (c.CodCidade = cid.IDCidade)
+	group by c.IDCliente, c.NomeCliente, cid.NomeCidade
+
+select * from vClienteServico
+
+--8) Fazer uma stored procedure (sp) que recebe como parâmetro um estado (UF).
+/*
+E retorna os dados:
+UF, Nome do Estado. Contar quantos clientes tem por estado;
+Contar quantos fornecedores tem por estado.
+*/
