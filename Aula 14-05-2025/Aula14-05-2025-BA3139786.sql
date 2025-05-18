@@ -492,7 +492,7 @@ begin
 		TBCliente as c
 	where c.IDCliente = @CodCliente
 	group by c.IDCliente, c.NomeCliente, c.Telefone
-	if @@TRANCOUNT != 0
+	if @@ERROR != 0
 	begin
 		rollback transaction tSpCliente
 	end
@@ -582,7 +582,7 @@ begin
 		TBFuncionario as f
 		on (fs.CodFuncionario = f.IDFuncionario)
 	where (s.IDServico = @CodServico)
-	if @@TRANCOUNT != 0
+	if @@ERROR != 0
 	begin
 		rollback transaction tSpServico
 	end
@@ -737,3 +737,38 @@ E retorna os dados:
 UF, Nome do Estado. Contar quantos clientes tem por estado;
 Contar quantos fornecedores tem por estado.
 */
+create procedure spClientesFornecedoresPEstado
+(@CodUF varchar(2))
+as
+begin
+	begin transaction tClientesFornecedoresPEstado
+		select
+			e.IDUF							[UF],
+			e.NomeEstado					[Nome do Estado],
+			count(cli.IDCliente)			[Quantidade de Clientes],
+			count(f.IDFornecedor)			[Quantiade de Fornecedores]
+		from
+			TBEstado as e
+		join
+			TBCidade as c
+			on (e.IDUF = c.CodUF)
+		join
+			TBCliente as cli
+			on (c.IDCidade = cli.CodCidade)
+		join
+			TBFornecedor as f
+			on (c.IDCidade = f.CodCidade)
+		where (e.IDUF = @CodUF)
+		group by e.IDUF, e.NomeEstado
+	if @@ERROR = 0
+	begin
+		commit transaction tClientesFornecedoresPEstado
+	end
+	else
+	begin
+		rollback transaction tClientesFornecedoresPEstado
+	end
+end
+
+exec spClientesFornecedoresPEstado 'ES'
+exec spClientesFornecedoresPEstado 'SP'
