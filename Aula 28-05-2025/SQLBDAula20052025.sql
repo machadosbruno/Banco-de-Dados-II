@@ -136,7 +136,7 @@ insert into TBProduct3139786 (product_id, product_name, category_id, quantity_pe
 (13, 'Tablet Educacional Infantil', 3, 1, 199.90, 65, 0),
 (14, 'Livro "Orgulho e Preconceito"', 5, 1, 29.90, 110, 0),
 (15, 'Jaqueta de Couro Sintético P', 8, 1, 150.00, 35, 0);
-delete from TBPurchase3139786
+
 insert into TBPurchase3139786 (purchase_id, customer_id, employee_id, total_price, purchase_date, shipped_date, ship_address, ship_city, ship_country) values
 (1, 1, 2, 1200.00, '20230110 09:30:00.000', '20230111 14:00:00.000', 'Rua das Flores, 10', 'Lisboa', 'Portugal'),
 (2, 2, 3, 850.00, '20230115 11:00:00.000', '20230116 16:30:00.000', 'Avenida Central, 20', 'Porto', 'Portugal'),
@@ -171,3 +171,272 @@ insert into TBPurchaseItem3139786 (purchase_id, product_id, unit_price, quantity
 (14, 14, 29.90, 1),
 (15, 15, 150.00, 2);
 
+/*
+Exercício 2). Criar uma consulta e depois uma visão (view) para:
+exibir (mostrar) todos os dados presentes na tabela Product.
+Mostrar a execução da visão.
+*/
+
+select
+	product_id				[ID],
+	product_name			[Nome do produto],
+	category_id				[ID Categoria],
+	quantity_per_unit		[Quantidade por unidade],
+	unit_price				[Preço Unidade],
+	units_in_stock			[Unidades em Estoque],
+	discontinued			[Descontinuado?]
+from TBProduct3139786
+
+create view vProdutos
+as
+	select
+		product_id				[ID],
+		product_name			[Nome do produto],
+		category_id				[ID Categoria],
+		quantity_per_unit		[Quantidade por unidade],
+		unit_price				[Preço Unidade],
+		units_in_stock			[Unidades em Estoque],
+		discontinued			[Descontinuado?]
+	from TBProduct3139786
+
+select * from vProdutos
+
+/*
+Exercício 3). Criar uma consulta e depois uma visão (view).
+Exibir (mostrar, retornar) os nomesdosprodutos com um preço unitário maior ou igual a 3,5.
+Mostrar a execução da visão.
+*/
+
+select
+	product_name				[Nome dos Produtos]
+from
+	TBProduct3139786
+where
+	unit_price >= 3.5
+
+create view vProdutosPrecoUnitarioMaior3eMeio
+as
+	select
+		product_name				[Nome dos Produtos]
+	from
+		TBProduct3139786
+	where
+		unit_price >= 3.5
+
+select * from vProdutosPrecoUnitarioMaior3eMeio
+
+/*
+Exercício 4). Criar uma consulta e depois uma visão (view).
+Exibir (mostrar/retornar) os dados de todos os Produtos em categorias
+com ID 1 (Alimentos) ou 5 (Frutas e legumes) e com preço unitário acimade3,5
+*/
+
+select
+	product_id				[ID],
+	product_name			[Nome do produto],
+	category_id				[ID Categoria],
+	quantity_per_unit		[Quantidade por unidade],
+	unit_price				[Preço Unidade],
+	units_in_stock			[Unidades em Estoque],
+	discontinued			[Descontinuado?]
+from
+	TBProduct3139786
+where
+	(unit_price >= 3.5 and (category_id = 1 or category_id = 5))
+
+create view vProdutosPorCategoria1ou5
+as
+	select
+		product_id				[ID],
+		product_name			[Nome do produto],
+		category_id				[ID Categoria],
+		quantity_per_unit		[Quantidade por unidade],
+		unit_price				[Preço Unidade],
+		units_in_stock			[Unidades em Estoque],
+		discontinued			[Descontinuado?]
+	from
+		TBProduct3139786
+	where
+		(unit_price >= 3.5 and (category_id = 1 or category_id = 5))
+
+select * from vProdutosPorCategoria1ou5
+
+/*
+Exercício 5). Criar uma consulta e depois uma visão (view).
+Que exibe, mostra, retorna: os nomesdosprodutos junto com suas categorias.
+Exiba duas colunas: Product_Name e Category_Name.
+Use alias para colocar o nome das colunas em português.
+*/
+
+select
+	p.product_name					[Nome dos Produtos],
+	c.name							[Nome das Categorias]
+from
+	TBProduct3139786 as p
+join
+	TBCategory3139786 as c
+	on (p.category_id = c.category_id)
+
+create view vProdutoECategoria
+as
+	select
+		p.product_name					[Nome dos Produtos],
+		c.name							[Nome das Categorias]
+	from
+		TBProduct3139786 as p
+	join
+		TBCategory3139786 as c
+		on (p.category_id = c.category_id)
+
+select * from vProdutoECategoria
+
+/*
+Exercício 6). Fazer uma consulta e uma visão que exibe, mostra, retorna:
+para cada compra, o ID da compra, o nome do funcionário, o nome cliente,
+Calcular o Total da Compra, e Contar Quantos produtos tem na compra.
+Usar alias e traduzir o nome das colunas para o português.
+Mostrar a execução da visão.
+*/
+
+select
+	pur.purchase_id						[ID da Compra],
+	emp.first_name						[Nome do funcionário],
+	c.contact_name						[Nome do Cliente],
+	sum(pri.quantity * pri.unit_price)	[Total da compra],
+	count(pri.product_id)				[Quantidade de Produtos]
+from
+	TBPurchase3139786 as pur
+join
+	TBEmployee3139786 as emp
+	on (pur.employee_id = emp.employee_id)
+join
+	TBCustomer3139786 as c
+	on (c.customer_id = pur.customer_id)
+join
+	TBPurchaseItem3139786 as pri
+	on (pur.purchase_id = pri.purchase_id)
+group by pur.purchase_id, emp.first_name, c.contact_name
+
+create view vCompra
+as
+	select
+		pur.purchase_id						[ID da Compra],
+		emp.first_name						[Nome do funcionário],
+		c.contact_name						[Nome do Cliente],
+		sum(pri.quantity * pri.unit_price)	[Total da compra],
+		count(pri.product_id)				[Quantidade de Produtos]
+	from
+		TBPurchase3139786 as pur
+	join
+		TBEmployee3139786 as emp
+		on (pur.employee_id = emp.employee_id)
+	join
+		TBCustomer3139786 as c
+		on (c.customer_id = pur.customer_id)
+	join
+		TBPurchaseItem3139786 as pri
+		on (pur.purchase_id = pri.purchase_id)
+	group by pur.purchase_id, emp.first_name, c.contact_name
+
+select * from vCompra
+
+/*
+Exercício 7). Customizar o exercício 6), de tal forma que seja possível no momento
+de fazer uma pesquisa fazer a passagem do parâmetro ID de um pedido (ou compra).
+Fazer uma função (fx) e uma procedure(sp) que exibe os mesmos dados do Exercício 6).
+A fx e a sp deve receber como parâmetro de entrada o código de um pedido (compra).
+Mostrar a execução da sp e da fx para duas(2) compras.
+*/
+
+create function fCompra
+(@purchase_id int)
+returns table
+as
+return
+(	select
+			pur.purchase_id						[ID da Compra],
+			emp.first_name						[Nome do funcionário],
+			c.contact_name						[Nome do Cliente],
+			sum(pri.quantity * pri.unit_price)	[Total da compra],
+			count(pri.product_id)				[Quantidade de Produtos]
+		from
+			TBPurchase3139786 as pur
+		join
+			TBEmployee3139786 as emp
+			on (pur.employee_id = emp.employee_id)
+		join
+			TBCustomer3139786 as c
+			on (c.customer_id = pur.customer_id)
+		join
+			TBPurchaseItem3139786 as pri
+			on (pur.purchase_id = pri.purchase_id)
+		where
+			pur.purchase_id = @purchase_id
+		group by pur.purchase_id, emp.first_name, c.contact_name
+);
+
+select * from fCompra(1);
+select * from fCompra(7);
+
+create procedure spCompra
+(@purchase_id int)
+as
+begin
+	begin transaction tCompra
+		select
+			pur.purchase_id						[ID da Compra],
+			emp.first_name						[Nome do funcionário],
+			c.contact_name						[Nome do Cliente],
+			sum(pri.quantity * pri.unit_price)	[Total da compra],
+			count(pri.product_id)				[Quantidade de Produtos]
+		from
+			TBPurchase3139786 as pur
+		join
+			TBEmployee3139786 as emp
+			on (pur.employee_id = emp.employee_id)
+		join
+			TBCustomer3139786 as c
+			on (c.customer_id = pur.customer_id)
+		join
+			TBPurchaseItem3139786 as pri
+			on (pur.purchase_id = pri.purchase_id)
+		where
+			pur.purchase_id = @purchase_id
+		group by pur.purchase_id, emp.first_name, c.contact_name
+	if @@ERROR = 0
+	begin
+		commit transaction tCompra
+	end
+	else
+	begin
+		rollback transaction tCompra
+	end
+end
+
+exec spCompra 1
+exec spCompra 7
+
+/*
+Exercício 8). Fazer uma consulta e depois uma visão. Que, para cada compra (pedido),
+exiba(mostra, retorna) todas as categorias de produtos comprados nessa compra.
+Mostre cada categoria apenas uma vez para cada compra.
+Mostrar a execução da visão.
+*/
+
+select distinct
+	pur.purchase_id,
+	prd.category_id
+from
+	TBPurchase3139786 as pur
+join
+	TBPurchaseItem3139786 as pri
+	on (pur.purchase_id = pri.purchase_id)
+right join
+	TBProduct3139786 as prd
+	on (pri.product_id = prd.product_id)
+
+insert into TBPurchase3139786 (purchase_id, customer_id, employee_id, total_price, purchase_date, shipped_date, ship_address, ship_city, ship_country) values
+(16, 1, 2, 1200.00, '20230110 09:30:00.000', '20230111 14:00:00.000', 'Rua das Flores, 10', 'Lisboa', 'Portugal')
+
+insert into TBPurchaseItem3139786 (purchase_id, product_id, unit_price, quantity) values
+(16, 1, 1200.00, 1)
