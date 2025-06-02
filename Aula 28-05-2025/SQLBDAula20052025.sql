@@ -435,8 +435,25 @@ right join
 	TBProduct3139786 as prd
 	on (pri.product_id = prd.product_id)
 
+--inserções para auxílio nos testes
 insert into TBPurchase3139786 (purchase_id, customer_id, employee_id, total_price, purchase_date, shipped_date, ship_address, ship_city, ship_country) values
 (16, 1, 2, 1200.00, '20230110 09:30:00.000', '20230111 14:00:00.000', 'Rua das Flores, 10', 'Lisboa', 'Portugal')
 
 insert into TBPurchaseItem3139786 (purchase_id, product_id, unit_price, quantity) values
 (16, 1, 1200.00, 1)
+
+create view vCareoriasCompra
+as
+select distinct
+	pur.purchase_id,
+	prd.category_id
+from
+	TBPurchase3139786 as pur
+join
+	TBPurchaseItem3139786 as pri
+	on (pur.purchase_id = pri.purchase_id)
+right join
+	TBProduct3139786 as prd
+	on (pri.product_id = prd.product_id)
+
+select * from vCareoriasCompra
