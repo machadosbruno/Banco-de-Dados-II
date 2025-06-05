@@ -345,3 +345,234 @@ INSERT INTO TBDevolucaoMaterial (IDDevolucao, CodEmprestimo, CodMaterial, CodFun
 -- Emprestimo 5: Previsto 2025-12-05, Devolvido 2025-20-05 (8 dias de atraso)
 (5, 5, 5, 35, '2025-20-05 09:30:00.500', 'Devolvido com atraso considerável, multa aplicada.', 8, 10.00);
 
+/*
+3) Fazer uma consulta e uma visão de mostra (retorna):
+os dados dos usuários com seus respectivos materiaisemprestados.
+Mostrar a execução da visão;*/
+select
+	u.IDUsuario							[ID],
+	u.NomeUsuario						[Nome do usuário],
+	u.DataCadastro						[Data de cadastro],
+	u.Telefone,
+	u.Email,
+	u.Endereco							[Endereço],
+	u.Numero,
+	u.Municipio							[Município],
+	u.UF,
+	m.IDMaterial						[ID do Material],
+	m.DescricaoMaterial					[Descricao do Material]
+from
+	TBUsuario as u
+join
+	TBEmprestimo as e
+	on (u.IDUsuario = e.CodUsuario)
+join
+	TBMaterialEmprestado as me
+	on (e.IDEmprestimo = me.CodEmprestimo)
+join
+	TBMaterial as m
+	on (m.IDMaterial = me.CodMaterial)
+
+--insert para teste se vai mostrar mais de um material por usuário, quando tiver
+INSERT INTO TBMaterialEmprestado (CodEmprestimo, CodMaterial, DataEmprestimo, DataDevolucao, Quantidade, Observacao) VALUES
+(1, 2, '2025-01-05', '2025-10-05', 1, 'Material 2 emprestado')
+
+create view vMateriaisEmprestadosAosUsuarios
+as
+	select
+		u.IDUsuario							[ID],
+		u.NomeUsuario						[Nome do usuário],
+		u.DataCadastro						[Data de cadastro],
+		u.Telefone,
+		u.Email,
+		u.Endereco							[Endereço],
+		u.Numero,
+		u.Municipio							[Município],
+		u.UF,
+		m.IDMaterial						[ID do Material],
+		m.DescricaoMaterial					[Descricao do Material]
+	from
+		TBUsuario as u
+	join
+		TBEmprestimo as e
+		on (u.IDUsuario = e.CodUsuario)
+	join
+		TBMaterialEmprestado as me
+		on (e.IDEmprestimo = me.CodEmprestimo)
+	join
+		TBMaterial as m
+		on (m.IDMaterial = me.CodMaterial)
+
+select * from vMateriaisEmprestadosAosUsuarios
+
+/*
+4) Fazer uma consulta e uma visão de mostra (retorna):
+os dados dos usuários que não fizeram locações.
+Mostrara execução da visão.
+*/
+select
+	u.IDUsuario							[ID],
+	u.NomeUsuario						[Nome do usuário],
+	u.DataCadastro						[Data de cadastro],
+	u.Telefone,
+	u.Email,
+	u.Endereco							[Endereço],
+	u.Numero,
+	u.Municipio							[Município],
+	u.UF
+from
+	TBUsuario as u
+where u.IDUsuario NOT IN (
+	select CodUsuario from TBEmprestimo
+)
+
+create view vUsuariosSemLocacao
+as
+	select
+		u.IDUsuario							[ID],
+		u.NomeUsuario						[Nome do usuário],
+		u.DataCadastro						[Data de cadastro],
+		u.Telefone,
+		u.Email,
+		u.Endereco							[Endereço],
+		u.Numero,
+		u.Municipio							[Município],
+		u.UF
+	from
+		TBUsuario as u
+	where u.IDUsuario NOT IN (
+		select CodUsuario from TBEmprestimo
+	)
+
+select * from vUsuariosSemLocacao
+
+/*
+5) Fazer uma procedure (sp) que recebe como parâmetro o Código de um Material
+e retornar os dados dos empréstimos deste material (o histórico do material).
+Incluir o funcionário que locou, data da locação, datadadevolução, se é tipo
+impresso ou DVD. Mostrar a execução da sp de pelo menos dois (2) materiais
+*/
+create procedure spEmprestimosPorMaterial
+(@CodMaterial int)
+as
+begin
+	select
+		e.IDEmprestimo								[ID],
+		e.DataEmprestimo							[Data da Locação],
+		e.DataPrevisaoDevolucao						[Previsão de Devolução],
+		e.CodUsuario								[Código do usuário],
+		e.CodFuncionario							[Código do Funcionário],
+		e.TotalDiasEmprestimo						[Total de dias do empréstimo],
+		e.Observacao,
+		u.NomeUsuario								[NomeFuncioário],
+		dm.DataDevolucao							[Data de Devolução],
+		m.Tipo										[Tipo]
+	from
+		TBEmprestimo as e
+	join
+		TBMaterialEmprestado as me
+		on (e.IDEmprestimo = me.CodEmprestimo)
+	join
+		TBFuncionario as f
+		on (e.CodFuncionario = f.CodFuncionario)
+	join
+		TBUsuario as u
+		on (f.CodFuncionario = u.IDUsuario)
+	join
+		TBDevolucaoMaterial as dm
+		on (me.CodEmprestimo = dm.CodEmprestimo AND me.CodMaterial = dm.CodMaterial)
+	join 
+		TBMaterial as m
+		on (me.CodMaterial = m.IDMaterial)
+	where me.CodMaterial = @CodMaterial
+end
+
+exec spEmprestimosPorMaterial 3;
+exec spEmprestimosPorMaterial 23;
+
+/*
+6) Fazer uma visão (view) que retorna, mostra, todos os materiais emprestados
+e ainda não devolvidos. Incluir o funcionário que emprestou e usuário que está
+com o material e tipo do material e data prevista para devolução e quantidade
+de dias de atraso na devolução. Mostrar a execução da visão. 
+*/
+create view vMateriaisNaoDevolvidos
+as
+	select
+		m.IDMaterial							[ID],
+		m.DescricaoMaterial						[Descrição do Material],
+		m.Custo,
+		m.CodFuncionario						[Código do Funcionário],
+		m.DataCadastro							[Data de Cadastro],
+		m.Tipo,
+		u.NomeUsuario							[Nome Funcionário],
+		(select u2.NomeUsuario from TBUsuario as u2 where IDUsuario = e.CodUsuario) [Nome do Usuário com o material],
+		dm.DiasAtraso							[Dias de atraso]
+	from
+		TBMaterial as m
+	join
+		TBMaterialEmprestado as me
+		on (m.IDMaterial = me.CodMaterial)
+	join
+		TBEmprestimo as e
+		on (me.CodEmprestimo = e.IDEmprestimo)
+	join TBUsuario as u
+		on (e.CodFuncionario = u.IDUsuario)
+	join
+		TBDevolucaoMaterial as dm
+		on (me.CodEmprestimo = dm.CodEmprestimo AND me.CodMaterial = dm.CodMaterial)
+
+select * from vMateriaisNaoDevolvidos
+
+/*
+7) Fazer uma stored procedure (sp) que recebe como parâmetro o código de um funcionário e retorna:
+Todos os materiais emprestados, mostrar o nome do material, calcular quantos dias estava previsto ficar com material,
+Mostrar a execução da sp para pelo menos dois (2) materiais.
+*/
+create procedure spMateriaisEmprestadosPorFuncinario
+(@CodFuncionario int)
+as
+begin
+	select
+		m.DescricaoMaterial							[Nome do Material],
+		DATEDIFF(DD, e.DataEmprestimo, e.DataPrevisaoDevolucao) [Previsão de dias para ficar com o Material]
+	from
+		TBMaterial as m
+	join
+		TBMaterialEmprestado as me
+		on (m.IDMaterial = me.CodMaterial)
+	join
+		TBEmprestimo as e
+		on (me.CodEmprestimo = e.IDEmprestimo)
+	where (e.CodFuncionario = @CodFuncionario)
+end
+
+exec spMateriaisEmprestadosPorFuncinario 32
+exec spMateriaisEmprestadosPorFuncinario 35
+
+/*
+8) Fazer uma consulta que mostrar os dados dos usuários que fizeram pagamento por atraso nas devoluções.
+*/
+
+select
+	u.IDUsuario							[ID],
+	u.NomeUsuario						[Nome do usuário],
+	u.DataCadastro						[Data de cadastro],
+	u.Telefone,
+	u.Email,
+	u.Endereco							[Endereço],
+	u.Numero,
+	u.Municipio							[Município],
+	u.UF
+from
+	TBUsuario as u
+	join
+		TBEmprestimo as e
+		on (u.IDUsuario = e.CodUsuario)
+	join
+		TBMaterialEmprestado as me
+		on (e.IDEmprestimo = me.CodEmprestimo)
+	join
+		TBDevolucaoMaterial as dm
+		on (me.CodEmprestimo = dm.CodEmprestimo AND me.CodMaterial = dm.CodMaterial)
+	
